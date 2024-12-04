@@ -117,7 +117,9 @@ def create_campaign():
             "adset_id": adset['id'],
             "ad_id": ad['id']
         })
+
     except Exception as e:
+        # Cette ligne est corrigée pour avoir la bonne indentation
         return jsonify({"status": "error", "message": str(e)})
 
 # Ajoutez cette route pour définir un endpoint par défaut
@@ -128,7 +130,3 @@ def home():
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
 
-        return jsonify({"status": "error", "message": str(e)})
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
