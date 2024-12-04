@@ -25,7 +25,7 @@ def create_campaign():
     try:
         # Créer une campagne en utilisant les données reçues
         ad_account = AdAccount(AD_ACCOUNT_ID)
-        params = {
+        campaign_params = {
             'name': data.get('name'),
             'objective': data.get('objective'),
             'status': data.get('status', 'PAUSED'),
@@ -44,7 +44,10 @@ def create_campaign():
             'pacing_type': data.get('pacing_type', ['standard']),
         }
 
-       # Créer le groupe d'annonces (ad set) avec les informations de ciblage
+        # Save the campaign creation response
+        campaign = ad_account.create_campaign(params=campaign_params)
+
+        # Créer le groupe d'annonces (ad set) avec les informations de ciblage
         adset_params = {
             'name': f"{data.get('name')} - Ad Set",
             'campaign_id': campaign[Campaign.Field.id],
@@ -109,6 +112,11 @@ def create_campaign():
         })
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
+
+if __name__ == '__main__':
+    # Port configuré pour Render ou par défaut à 5000
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
+
 
 if __name__ == '__main__':
     # Port configuré pour Render ou par défaut à 5000
