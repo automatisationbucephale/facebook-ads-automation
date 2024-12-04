@@ -1,0 +1,10 @@
+# Fichiers contenant des secrets
+.env
+
+# Ignorer les fichiers générés
+__pycache__/
+*.pyc
+
+# Environnements virtuels
+venv/
+env/
