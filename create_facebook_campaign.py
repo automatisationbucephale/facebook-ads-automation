@@ -3,6 +3,9 @@ from flask import Flask, request, jsonify
 from facebook_business.api import FacebookAdsApi
 from facebook_business.adobjects.adaccount import AdAccount
 from facebook_business.adobjects.campaign import Campaign
+from facebook_business.adobjects.adset import AdSet
+from facebook_business.adobjects.adcreative import AdCreative
+from facebook_business.adobjects.ad import Ad
 
 # Initialisation de l'API Facebook avec les informations d'identification
 ACCESS_TOKEN = 'EAALAhLDRjTcBO4zyVuIVDmGvGYTkAlVeomK424zboUkAX2XEVluHHQ1dZBTfcSco81gBmyT6QWwcPScZAazbZA1VlTqaY2b0fHjlLPfrRS42kutByYCJajdwsroBE9kF0FTdADuuDbOoLcu1AQ9qDOs9i6wf6ZAZAGoWpO8yPadreZAkodyRcowiT7ZBhkVQW0DCdFwBbonJ6g0AZCF98Lf5W30enJVXhqx6QQZDZD'
@@ -41,9 +44,7 @@ def create_campaign():
             'pacing_type': data.get('pacing_type', ['standard']),
         }
 
-        campaign = ad_account.create_campaign(params=params)
-
-        # Créer le groupe d'annonces (ad set) avec les informations de ciblage
+       # Créer le groupe d'annonces (ad set) avec les informations de ciblage
         adset_params = {
             'name': f"{data.get('name')} - Ad Set",
             'campaign_id': campaign[Campaign.Field.id],
@@ -88,7 +89,7 @@ def create_campaign():
         # Créer l'annonce (ad creative)
         creative_params = {
             'name': f"{data.get('name')} - Creative",
-            'adset_id': adset['id'],
+            'adset_id': adset[AdSet.Field.id],
             'status': data.get('status', 'PAUSED'),
             'creative': {
                 'title': data.get('creative').get('title'),
@@ -103,11 +104,12 @@ def create_campaign():
         return jsonify({
             "status": "success",
             "campaign_id": campaign[Campaign.Field.id],
-            "adset_id": adset['id'],
-            "ad_id": ad['id']
+            "adset_id": adset[AdSet.Field.id],
+            "ad_id": ad[Ad.Field.id]
         })
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
+        return jsonify({"status": "error", "message": str(e)}), 400
 
 if __name__ == '__main__':
+    # Port configuré pour Render ou par défaut à 5000
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
