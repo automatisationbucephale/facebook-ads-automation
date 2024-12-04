@@ -18,10 +18,15 @@ FacebookAdsApi.init(access_token=ACCESS_TOKEN, app_id=APP_ID, app_secret=APP_SEC
 # Configuration du serveur Flask
 app = Flask(__name__)
 
+# Ajout d'une route pour l'URL racine
+@app.route('/', methods=['GET'])
+def home():
+    return "Bienvenue dans l'application d'automatisation des campagnes Facebook !", 200
+
 @app.route('/create-campaign', methods=['POST'])
 def create_campaign():
     data = request.get_json()
-    
+
     if not data:
         return jsonify({"status": "error", "message": "Invalid input data"}), 400
 
@@ -87,8 +92,4 @@ def create_campaign():
         return jsonify({"status": "error", "message": str(e)}), 400
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
-
-if __name__ == '__main__':
-    # Port configuré pour Render ou par défaut à 5000
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
