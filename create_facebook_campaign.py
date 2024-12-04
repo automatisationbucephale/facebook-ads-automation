@@ -39,6 +39,7 @@ def create_campaign():
             'bid_strategy': data.get('bid_strategy', 'LOWEST_COST_WITHOUT_CAP'),
             'advantage_campaign_budget': data.get('advantage_campaign_budget', False),
             'lead_placement': data.get('lead_placement'),
+            'advantage_plus': data.get('placements_advantage', False)
         }
 
         campaign = ad_account.create_campaign(params=params)
@@ -60,6 +61,14 @@ def create_campaign():
                 'age_max': data.get('targeting', {}).get('age_max'),
                 'genders': data.get('targeting', {}).get('genders', []),
                 'interests': data.get('targeting', {}).get('interests', []),
+                'behaviors': data.get('targeting', {}).get('behaviors', []),
+                'custom_audiences': data.get('targeting', {}).get('custom_audiences', []),
+                'excluded_custom_audiences': data.get('targeting', {}).get('excluded_custom_audiences', []),
+                'life_events': data.get('targeting', {}).get('life_events', []),
+                'work_employers': data.get('targeting', {}).get('work_employers', []),
+                'industries': data.get('targeting', {}).get('industries', []),
+                'education_schools': data.get('targeting', {}).get('education_schools', []),
+                'income': data.get('targeting', {}).get('income', []),
             },
             'placements': {
                 'facebook_positions': data.get('placements', {}).get('facebook_positions', []),
@@ -87,6 +96,16 @@ def create_campaign():
                 'body': data.get('creative', {}).get('body'),
                 'link': data.get('creative', {}).get('link'),
                 'image_hash': data.get('creative', {}).get('image_hash'),
+                'call_to_action': data.get('creative', {}).get('call_to_action', 'SIGN_UP'),
+            },
+            'content': {
+                'text': data.get('content', {}).get('text', 'Default text'),
+                'title': data.get('content', {}).get('title', 'Default title'),
+                'description': data.get('content', {}).get('description', 'Default description'),
+                'media': {
+                    'type': data.get('content', {}).get('media', {}).get('type', 'IMAGE'),
+                    'media_id': data.get('content', {}).get('media', {}).get('media_id', 'Default media ID'),
+                }
             }
         }
 
@@ -99,6 +118,16 @@ def create_campaign():
             "ad_id": ad['id']
         })
     except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
+# Ajoutez cette route pour définir un endpoint par défaut
+@app.route('/', methods=['GET'])
+def home():
+    return "Bienvenue sur l'API Facebook Ads Automation", 200
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
+
         return jsonify({"status": "error", "message": str(e)})
 
 if __name__ == '__main__':
